@@ -5,9 +5,11 @@ import numpy as np
 from PIL import Image
 
 # Set the page configuration of the app, including the page title, icon, and layout.
-"""
-Your Code Here
-"""
+st.set_page_config(
+    page_title="Timelytics",
+    page_icon="⏱️",
+    layout="centered" # or "wide" depending on your preference
+)
 
 # Display the title and captions for the app.
 st.title("Timelytics: Optimize your supply chain with advanced forecasting techniques.")
@@ -23,12 +25,15 @@ st.caption(
 
 # Load the trained ensemble model from the saved pickle file.
 modelfile = "./voting_model.pkl"
-"""
-Your Code Here
-"""
 
 # Caching the model for faster loading
 @st.cache_resource
+def load_model(path):
+    with open(path, 'rb') as file:
+        model = pickle.load(file)
+    return model
+
+voting_model = load_model(modelfile)
 
 
 # Define the function for the wait time predictor using the loaded model. This function takes in the input parameters and returns a predicted wait time in days.
@@ -82,14 +87,12 @@ with st.sidebar:
         "Geolocation State of the Seller", value=20
     )
     distance = st.number_input("Distance", value=475.35)
-    """
-    Your Code Here
-    """
+    
+    # Define the submit button here!
+    submit = st.button("Predict Wait Time") # <--- ADD THIS LINE HERE
 
-
-# Define the submit button for the input parameters.
+# Define the output container for the predicted wait time.
 with st.container():
-    # Define the output container for the predicted wait time.
     st.header("Output: Wait Time in Days")
 
     # When the submit button is clicked, call the wait time predictor function and display the predicted wait time in the output container.
@@ -106,6 +109,7 @@ with st.container():
         )
         with st.spinner(text="This may take a moment..."):
             st.write(prediction)
+    
     import pandas as pd
 
     # Define a sample dataset for demonstration purposes.
@@ -121,9 +125,7 @@ with st.container():
     }
 
     # Create a DataFrame from the sample dataset.
-    """
-    Your Code Here
-    """
+    df = pd.DataFrame(data)
 
     # Display the sample dataset in the Streamlit app.
     st.header("Sample Dataset")
